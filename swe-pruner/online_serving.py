@@ -7,7 +7,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import logging
 import uvicorn
-from hf.prune_wrapper import SwePrunerForCodePruning
+from hf.prune_wrapper import SwePrunerForCodePruning, PruneRequest, PruneResponse
 
 
 logging.basicConfig(level=logging.INFO)
@@ -23,7 +23,7 @@ model: Optional[SwePrunerForCodePruning] = None
 async def startup_event():
     try:
         global model
-        model_name_or_path = "./swe_pruner"  # HINT: where you download the hf model
+        model_name_or_path = "./model"
         model = SwePrunerForCodePruning.from_pretrained(model_name_or_path)
 
         logger.info("Model loaded successfully on startup")
@@ -39,6 +39,14 @@ async def health_check():
         "status": "healthy",
         "model_loaded": model is not None,
     }
+
+
+@app.post("/prune", response_model=PruneResponse)
+async def prune_code(request: PruneRequest) -> PruneResponse | None:
+    if model is None:
+        raise HTTPException(status_code=500, detail="Model not loaded")
+    response = model.prune(request)
+    return response
 
 
 if __name__ == "__main__":

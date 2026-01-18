@@ -110,7 +110,7 @@ if __name__ == "__main__":
         "--ttft_runs", type=int, default=10, help="Number of TTFT runs for averaging"
     )
     parser.add_argument(
-        "--model-path", type=str, default="swe-pruner", help="Dir path of the model"
+        "--model-path", type=str, default="./model", help="Dir path of the model"
     )
     args = parser.parse_args()
     load_model(args.model_path)
