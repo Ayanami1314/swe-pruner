@@ -49,6 +49,14 @@ async def prune_code(request: PruneRequest) -> PruneResponse | None:
     return response
 
 
+@app.post("/prune", response_model=PruneResponse)
+async def prune_code(request: PruneRequest) -> PruneResponse | None:
+    if model is None:
+        raise HTTPException(status_code=500, detail="Model not loaded")
+    response = model.prune(request)
+    return response
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="FastAPI service for code pruning with token-level scores"
