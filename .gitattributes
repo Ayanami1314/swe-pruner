@@ -1,9 +1,0 @@
-inference/swe-pruner/merges.txt filter=lfs diff=lfs merge=lfs -text
-inference/swe-pruner/model.safetensors filter=lfs diff=lfs merge=lfs -text
-inference/swe-pruner/special_tokens_map.json filter=lfs diff=lfs merge=lfs -text
-inference/swe-pruner/tokenizer_config.json filter=lfs diff=lfs merge=lfs -text
-inference/swe-pruner/vocab.json filter=lfs diff=lfs merge=lfs -text
-inference/swe-pruner/README.md filter=lfs diff=lfs merge=lfs -text
-inference/swe-pruner/added_tokens.json filter=lfs diff=lfs merge=lfs -text
-inference/swe-pruner/chat_template.jinja filter=lfs diff=lfs merge=lfs -text
-inference/swe-pruner/config.json filter=lfs diff=lfs merge=lfs -text
