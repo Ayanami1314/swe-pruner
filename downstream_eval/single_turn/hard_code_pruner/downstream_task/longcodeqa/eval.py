@@ -68,7 +68,8 @@ from reranker import (
 os.environ["TRANSFORMERS_OFFLINE"] = "1"
 os.environ["HF_DATASETS_OFFLINE"] = "1"
 os.environ["HF_HUB_OFFLINE"] = "1"
-# HINT: this is fucking hack for running llmlingua on offline machine, need fucking hack the lib from `self.oai_tokenizer = tiktoken.encoding_for_model("gpt-3.5-turbo")` -> `self.oai_tokenizer = tiktoken.get_encoding('cl100k_base')` and download the tokenizer first
+# NOTE: Offline workaround for LLMLingua/tiktoken.
+# See single_turn/README.md for details (cache + tokenizer behavior).
 tiktoken_cache_dir = "./tiktoken_cache"
 os.environ["TIKTOKEN_CACHE_DIR"] = tiktoken_cache_dir
 import tiktoken

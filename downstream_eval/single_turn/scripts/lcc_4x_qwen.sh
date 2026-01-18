@@ -19,8 +19,8 @@ RERANK_API_PORT=8000
 # Parameters
 MODEL_NAME="${1:-Qwen/Qwen2.5-Coder-7B-Instruct}"
 # MODEL_NAME="${1:-ByteDance-Seed/Seed-Coder-8B-Instruct}"
-BACKBONE_MODEL_PATH="${2:-/path/to/backbone_model}"
-HF_MODEL_PATH="${3:-/path/to/provence-hf}"
+BACKBONE_MODEL_PATH="${2:-/path/to/backbone_model}" # Qwen/Qwen3-Reranker-0.6B
+HF_MODEL_PATH="${3:-/path/to/swe-pruner}"
 export HF_MODEL_PATH=${HF_MODEL_PATH} # for online serving
 RESULT_DIR="${4:-downstream_eval/lcc/lcc_4x}"
 NUM_EXAMPLES="${5:-200}"
@@ -71,8 +71,8 @@ SUMMARY_MAX_TOKENS="${28:-256}"
 SUMMARY_TEMPERATURE="${29:-0.0}"
 
 PYTHON_BIN="/path/to/python"
-WORK_DIR="${WORK_DIR:-hard_code_pruner/downstream_task/LCC}"
-RERANK_SERVER_SCRIPT="${RERANK_SERVER_SCRIPT:-hard_code_pruner/inference/online_serving.py}"
+WORK_DIR="/path/to/downstream_task/LCC"
+RERANK_SERVER_SCRIPT="/path/to/inference/online_serving.py"
 BASE_LOG_DIR="logs-lcc-rerank"
 
 mkdir -p ${BASE_LOG_DIR}

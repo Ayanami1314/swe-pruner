@@ -20,8 +20,8 @@ RERANK_API_PORT=8000
 # Parameters
 # MODEL_NAME="${1:-/path/to/model}"
 MODEL_NAME="${1:-ByteDance-Seed/Seed-Coder-8B-Instruct}"
-BACKBONE_MODEL_PATH="${2:-/path/to/backbone_model}"
-HF_MODEL_PATH="${3:-/path/to/provence-hf}"
+BACKBONE_MODEL_PATH="${2:-/path/to/backbone_model}" # Qwen/Qwen3-Reranker-0.6B
+HF_MODEL_PATH="${3:-/path/to/swe-pruner}"
 export HF_MODEL_PATH=${HF_MODEL_PATH} # for online serving
 RESULT_DIR="${4:-downstream_eval/longcodeqa/longcodeqa_4x_bytedance}"
 NUM_EXAMPLES="${5:-200}"
@@ -78,8 +78,8 @@ TENSOR_PARALLEL_SIZE="${TENSOR_PARALLEL_SIZE:-2}"  # 主模型自己用的 TP
 
 
 PYTHON_BIN="/path/to/python"
-WORK_DIR="${WORK_DIR:-hard_code_pruner/downstream_task/longcodeqa}"
-RERANK_SERVER_SCRIPT="${RERANK_SERVER_SCRIPT:-hard_code_pruner/inference/online_serving.py}"
+WORK_DIR="/path/to/downstream_task/longcodeqa"
+RERANK_SERVER_SCRIPT="/path/to/inference/online_serving.py"
 BASE_LOG_DIR="logs-longcodeqa-rerank"
 # MAX_MODEL_LEN="${MAX_MODEL_LEN:-65536}"   # 64k 时用 65536；
 # MAX_MODEL_LEN="${MAX_MODEL_LEN:-131072}"   # 128k 时用 131072；
