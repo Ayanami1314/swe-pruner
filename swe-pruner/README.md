@@ -1,6 +1,6 @@
 ## Install
 ```
-cd inference
+cd swe-pruner
 ```
 Download `flash_attn-2.8.3+cu12torch2.8cxx11abiTRUE-cp312-cp312-linux_x86_64.whl` from github to current directory, then run
 ```
@@ -12,7 +12,7 @@ uv pip install -e .
 to install other dependencies.
 
 ## Model
-model has been placed at `./swe-pruner` and tracked by git-lfs.
+model has been placed at `./model` and tracked by git-lfs.
 
 ## Usage
 

@@ -1,0 +1,18 @@
+{
+  "architectures": [
+    "SwePrunerForCodeCompression"
+  ],
+  "backbone_model_name_or_path": "Qwen/Qwen3-Reranker-0.6B",
+  "bottleneck": 256,
+  "compression_head_type": "crf",
+  "compression_loss_type": "focal",
+  "dropout": 0.4,
+  "early_layer_ratio": 0.25,
+  "middle_layer_ratio": 0.5,
+  "model_type": "swepruner",
+  "num_fusion_layers": 1,
+  "num_heads": 8,
+  "torch_dtype": "bfloat16",
+  "transformers_version": "4.55.0",
+  "use_multi_layer_fusion": true
+}

@@ -8,9 +8,8 @@ LLM agents have demonstrated remarkable capabilities in software development, bu
 ├── downstream_eval/           # Downstream evaluation benchmarks
 │   ├── multi_turn/            # Includes: SWE-bench, SWEQA (coming soon)
 │   └── single_turn/           # Includes: LongCodeQA, LCC (LongCodeCompletion)
-├── inference/                 # Inference code and model utilities
-│   └── swe-pruner/            # Model files for SWE-Pruner
-└── train/                     # Training related code (coming soon)
+├── swe-pruner/                 # Inference code and model utilities
+│   └── model/            # Model files for SWE-Pruner
 ```
 
 ## Quick Start
