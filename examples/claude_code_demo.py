@@ -1,7 +1,7 @@
 """
 The simplest demo, demonstrating how to integrate the pruner in the Claude Agent SDK
 This demo demonstrates:
-1. How to create a tool with a pruner (in bash, cat, grep)
+1. How to create a tool with a pruner (in bash, cat)
 2. How to create an MCP server and configure ClaudeAgentOptions
 3. How to run queries using ClaudeSDKClient
 
