@@ -1,6 +1,6 @@
 Step 1:
 
-Download lcc to the single_turn directory. And `DATASET_PATH="${10:-/path/to/longcodeqa_xk.jsonl}"` implies that you can download from `https://huggingface.co/datasets/Steefano/LCB/tree/main -> LongCodeQA.zip`
+Download lcc(`microsoft/LCC_python` from huggingface) to the single_turn directory. And `DATASET_PATH="${10:-/path/to/longcodeqa_xk.jsonl}"` implies that you can download from `https://huggingface.co/datasets/Steefano/LCB/tree/main -> LongCodeQA.zip`
 
 Step 2:
 
