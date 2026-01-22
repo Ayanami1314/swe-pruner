@@ -1,0 +1,13 @@
+[project]
+name = "examples"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "claude-agent-sdk>=0.1.21",
+    "dotenv>=0.9.9",
+    "httpx[socksio]>=0.28.1",
+    "openhands>=1.10.0",
+    "pydantic>=2.12.5",
+]
