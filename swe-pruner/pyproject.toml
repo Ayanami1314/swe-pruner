@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "swe-pruner"
 version = "0.1.0"
-description = "Code pruning model for software engineering tasks"
+description = "Self-Adaptive Context Pruning for Coding Agents"
 readme = "README.md"
 requires-python = ">=3.12"
 authors = [
@@ -22,24 +22,32 @@ classifiers = [
 ]
 dependencies = [
     "fastapi>=0.123.0",
-    "flash-attn",
+    # "flash-attn",
     "huggingface-hub>=0.36.0",
     "socksio>=1.0.0",
-    "torch>=2.8.0",
-    "torchvision>=0.23.0",
+    # "torch>=2.8.0",
+    # "torchvision>=0.23.0",
     "transformers>=4.57.1",
     "typer>=0.19.2",
     "uvicorn>=0.38.0",
 ]
 
 [project.scripts]
-swe-pruner = "online_serving:main"
+swe-pruner = "swe_pruner.online_serving:main"
 
 [tool.hatchling.build.targets.wheel]
-packages = ["hf"]
+packages = ["src/swe_pruner"]
+
+[tool.hatchling.build]
 include = [
-    "hf",
-    "online_serving.py",
+  "src/swe_pruner/**/*.py",
+  "LICENSE",
+  "README.md",
+]
+exclude = [
+  "model",
+  "test-prune.sh",
+  "uv.lock",
 ]
 
 [tool.uv]

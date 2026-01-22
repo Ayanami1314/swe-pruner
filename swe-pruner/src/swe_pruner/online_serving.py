@@ -5,7 +5,7 @@ from fastapi import FastAPI, HTTPException
 import logging
 import uvicorn
 import typer
-from hf.prune_wrapper import SwePrunerForCodePruning, PruneRequest, PruneResponse
+from .prune_wrapper import SwePrunerForCodePruning, PruneRequest, PruneResponse
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
