@@ -1,0 +1,3 @@
+prune model
+exclude test-prune.sh
+exclude .gitignore
