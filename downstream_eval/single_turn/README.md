@@ -12,7 +12,7 @@ Step 3:
 Run the script you need.
 
 ```bash
-sbatch scripts/lcc_4x_qwen.sh`
+sbatch scripts/lcc_4x_qwen.sh
 ```
 Remember to replace the path that specifies /path/to, and it's best to use absolute paths.
 Notice that we use slurm, and you can also commit the task using bash. It require 4 gpus to run that, if using Slurm, you need to replace `--partition=h100x` with your cluster name.
