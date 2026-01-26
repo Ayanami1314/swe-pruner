@@ -15,7 +15,7 @@
 
 <p align="center"><b style="font-size: 1.2em;">Make Claude Tokens <span style="color:#FF702D;">40% Saving</span>!</b></p>
 
-<p align="center"><img src="./images/token_cost.png" style="width: 55%; height: auto;" alt="Tokens Cost Reduction"></p>
+<p align="center"><img src="./images/token_cost.png" style="width: 65%; height: auto;" alt="Tokens Cost Reduction"></p>
 
 <summary><h2>📢 Latest Updates</h2></summary>
 
@@ -32,7 +32,7 @@
 
 ## 📑 Introduction to SWE-Pruner
 
-<p align="center"><img src="./images/overview.jpg" style="width: 75%; height: auto;" alt="Tokens Cost Reduction"></p>
+<p align="center"><img src="./images/overview.jpg" style="width: 85%; height: auto;" alt="Tokens Cost Reduction"></p>
 
 Are you struggling with **excessive token costs** and latency when using LLM agents for software development? Traditional context compression often relies on fixed metrics like perplexity (PPL) and ignores task-specific code understanding. But **generic compression ≠ relevant preservation** — we need **task-aware context pruning** that retains critical implementation details.
 
