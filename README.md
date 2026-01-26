@@ -2,27 +2,51 @@
 
 <p align="center"><b>Semantic Highlight&nbsp; ◦ &nbsp;Coding Agent Native&nbsp; ◦ &nbsp;Flexibly Use&nbsp; ◦ &nbsp;Long Context Tailored</b></p>
 
-<p align="center"><b>Make Claude Tokens 40% Saving!</b></p>
+<p align="center"><b style="font-size: 2em; color: #3be040ff;">Make Claude Tokens 40% Saving!</b></p>
 
 ![Tokens Cost Reduction](./images/token_cost.png)
 <summary><h2>📢 Latest Updates</h2></summary>
 
 **🔥 Releases:**
 - 1/26/2025: Introduce **SWE-Pruner** 
-  - paper: https://arxiv.org/abs/2601.16746
-  - code: https://github.com/Ayanami1314/swe-pruner
-  - pip package: https://pypi.org/project/swe-pruner/
-  - huggingface repo: https://huggingface.co/ayanami-kitasan/code-pruner.
+  - 📖 paper: https://arxiv.org/abs/2601.16746
+  - ⚙️ code: https://github.com/Ayanami1314/swe-pruner
+  - 🐍 pip: https://pypi.org/project/swe-pruner/
+  - 🤗 huggingface: https://huggingface.co/ayanami-kitasan/code-pruner
 
 
 
 
-## Overview
+
+## 📑 Introduction to SWE-Pruner
 
 ![overview](./images/overview.jpg)
-LLM agents have demonstrated remarkable capabilities in software development, but their performance is hampered by long interaction contexts, which incur high API costs and latency. While various context compression approaches have emerged to tackle this challenge, they typically rely on fixed metrics such as perplexity (PPL), ignoring the task-specific nature of code understanding. As a result, they frequently disrupt syntactic and logical structures and fail to retain critical implementation details. In this paper, we propose SWE-Pruner, a self-adaptive context pruning framework tailored for coding agents. Drawing inspiration from how human programmers "selectively skim" source code during development and debugging, SWE-Pruner performs task-aware adaptive pruning for long contexts. Given the current task, the agent formulates an explicit goal (e.g., "focus on error handling") as a hint to guide the pruning targets. A lightweight neural skimmer (0.6B parameters) is trained to dynamically select relevant lines from the surrounding context given the goal. Evaluations across four benchmarks and multiple models validate SWE-Pruner's effectiveness in various scenarios, achieving 23-54% token reduction on agent tasks like SWE-Bench Verified and up to 14.84x compression on single-turn tasks like LongCodeQA with minimal performance impact.
 
-## Project Structure
+Are you struggling with **excessive token costs** and latency when using LLM agents for software development? Traditional context compression approaches rely on fixed metrics like perplexity (PPL), ignoring the task-specific nature of code understanding. But **generic compression ≠ relevant preservation** — what we truly need is **task-aware context pruning** that maintains critical implementation details. When working with complex codebases that demand precise understanding and debugging capabilities, one-size-fits-all compression often breaks syntactic structures and loses essential information.
+
+Inspired by how human programmers "selectively skim" source code during development, we propose SWE-Pruner — a self-adaptive context pruning framework specifically designed for coding agents. It enables agents to formulate explicit goals that guide intelligent context pruning, using a lightweight neural skimmer to **dynamically select relevant code lines**. This approach mimics how experienced developers navigate through codebases, focusing only on what matters for the current task. SWE-Pruner operates in two key steps:
+
+- Formulate task-specific goals to guide the pruning process
+- Dynamically select relevant code lines using a lightweight neural skimmer
+
+## 🎯 Core Features
+
+**🧠 Task-Aware Pruning**
+Moves beyond generic metrics like perplexity. SWE-Pruner understands the *intent* behind a coding task, allowing the agent to formulate explicit goals (e.g., "focus on error handling") that intelligently guide the context pruning process.
+
+**🤖 Coding Agent Native**
+Specifically designed for the multi-turn, interactive workflows of modern coding agents. It seamlessly integrates into the agent's decision loop, providing just-in-time context to enhance performance on complex software engineering tasks.
+
+**🎨 Semantic Highlight**
+Employs a lightweight 0.6B parameter neural skimmer trained to identify and preserve semantically critical lines of code. This ensures that logical structures and implementation details remain intact, preventing the information loss common in traditional compression.
+
+**⚡ Extreme Compression**
+Delivers significant token savings without sacrificing performance. Achieve 23-54% token reduction on complex agent tasks like SWE-Bench Verified and up to 14.84x compression on single-turn tasks like LongCodeQA, dramatically cutting API costs and latency.
+
+**🔧 Flexibly Use**
+A lightweight and adaptable framework that can be easily integrated with various LLMs and coding agents. Its flexible design allows it to be applied across a wide range of scenarios, from debugging to feature development.
+
+## 🌲 Project Structure
 ```text
 .
 ├── data/                      # Experiment trace archives and hyperparameter configurations
@@ -34,36 +58,37 @@ LLM agents have demonstrated remarkable capabilities in software development, bu
 ├── examples                   # Examples for integrating with other agents like claude code and openhands
 ```
 
-## Prerequisites
+## 🧰 Prerequisites
 
 This project uses `uv` for fast and efficient dependency management.
 
-## Quick Start
+## 🎮 Quick Start
 
-Goto [Inference Tutorial](./swe-pruner/README.md) to have a try!
+Go to [Inference Tutorial](./swe-pruner/README.md) and have a try!
 
 
-## Installation
+## ⚙️ Installation
 
 Since different modules have different dependencies, please refer to the specific `README` file inside each subfolder for detailed installation instructions.
 
-## User Guides
+## 📖 User Guides
 
 - For Users, look [Inference Tutorial](./swe-pruner/README.md) for real-world agents integration.
 
 - For Developers, look `./train`(coming soon) for train a pruner by yourself!
 
-- For Researchers, `./downstream_eval` has some scripts for reproducing our results.
+- For Researchers, `./downstream_eval` has some scripts for reproducing our results. We recommend to use [slurm](https://github.com/SchedMD/slurm) with at least 4 GPU to reuse our scripts.
 
 
-## Coming Soon
-- [ ] Update Training Code
-- [ ] Upload full parameters and trajectory files
-- [ ] Update HuggingFace model card
-- [x] Update agents integrate demo
+## 🔮 Coming Soon
+- [ ] 💻 Update Training Code
+- [ ] 📁 Upload full parameters and trajectory files & logs
+- [ ] 🤗 Update HuggingFace model card
+- [ ] 🤗 Update HuggingFace blog to introducing our  technical approach in detail.
+- [x] 🎮 Update agents integrate demo
 
 
-## Citation
+## 📜 Citation
 ```
 @misc{wang2026sweprunerselfadaptivecontextpruning,
       title={SWE-Pruner: Self-Adaptive Context Pruning for Coding Agents}, 
@@ -77,6 +102,6 @@ Since different modules have different dependencies, please refer to the specifi
 ```
 
 
-## Acknowledgements
+## 🏆 Acknowledgements
 - Bytedance Douyin Team for advises.
 - Alibaba Qwen Team for open-source models.
