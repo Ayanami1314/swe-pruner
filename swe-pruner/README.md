@@ -33,7 +33,7 @@ The pre-trained model files are not included in the PyPI package. You need to do
 1. **From HuggingFace Hub** (if available):
 ```bash
 # Using huggingface-hub
-huggingface-cli download <model-repo-id> --local-dir ./model
+huggingface-cli download ayanami-kitasan/code-pruner --local-dir ./model
 ```
 
 2. **Manual download**: Download the model files and place them in a directory (e.g., `./model`) with the following structure:

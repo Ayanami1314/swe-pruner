@@ -34,15 +34,26 @@ LLM agents have demonstrated remarkable capabilities in software development, bu
 ├── examples                   # Examples for integrating with other agents like claude code and openhands
 ```
 
-## Quick Start
-
 ## Prerequisites
 
 This project uses `uv` for fast and efficient dependency management.
 
-### Installation
+## Quick Start
+
+Goto [Inference Tutorial](./swe-pruner/README.md) to have a try!
+
+
+## Installation
 
 Since different modules have different dependencies, please refer to the specific `README` file inside each subfolder for detailed installation instructions.
+
+## User Guides
+
+- For Users, look [Inference Tutorial](./swe-pruner/README.md) for real-world agents integration.
+
+- For Developers, look `./train`(coming soon) for train a pruner by yourself!
+
+- For Researchers, `./downstream_eval` has some scripts for reproducing our results.
 
 
 ## Coming Soon
