@@ -4,7 +4,8 @@
 
 <p align="center"><b style="font-size: 2em; color: #3be040ff;">Make Claude Tokens 40% Saving!</b></p>
 
-![Tokens Cost Reduction](./images/token_cost.png)
+<p align="center"><img src="./images/token_cost.png" style="width: 65%; height: auto;" alt="Tokens Cost Reduction"></p>
+
 <summary><h2>📢 Latest Updates</h2></summary>
 
 **🔥 Releases:**
@@ -20,7 +21,7 @@
 
 ## 📑 Introduction to SWE-Pruner
 
-![overview](./images/overview.jpg)
+<p align="center"><img src="./images/overview.jpg" style="width: 85%; height: auto;" alt="Tokens Cost Reduction"></p>
 
 Are you struggling with **excessive token costs** and latency when using LLM agents for software development? Traditional context compression approaches rely on fixed metrics like perplexity (PPL), ignoring the task-specific nature of code understanding. But **generic compression ≠ relevant preservation** — what we truly need is **task-aware context pruning** that maintains critical implementation details. When working with complex codebases that demand precise understanding and debugging capabilities, one-size-fits-all compression often breaks syntactic structures and loses essential information.
 
@@ -75,7 +76,7 @@ Since different modules have different dependencies, please refer to the specifi
 
 - For Users, look [Inference Tutorial](./swe-pruner/README.md) for real-world agents integration.
 
-- For Developers, look `./train`(coming soon) for train a pruner by yourself!
+- For Developers, look `./train`(coming soon) for training a pruner by yourself!
 
 - For Researchers, `./downstream_eval` has some scripts for reproducing our results. We recommend to use [slurm](https://github.com/SchedMD/slurm) with at least 4 GPU to reuse our scripts.
 
