@@ -75,6 +75,7 @@ Since different modules have different dependencies, please refer to the specifi
 ## 📖 User Guides
 
 - For Users, look [Inference Tutorial](./swe-pruner/README.md) to start a swe-pruner locally and then reading [real world examples](examples/README.md) for agents integration.
+  - We now support [OpenHands](https://github.com/OpenHands/OpenHands) and [Claude Agent SDK](https://github.com/anthropics/claude-agent-sdk-python)!
 
 - For Developers, look `./train`(coming soon) for training a pruner by yourself!
 
