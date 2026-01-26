@@ -2,7 +2,7 @@
 
 <p align="center"><b>Semantic Highlight&nbsp; ◦ &nbsp;Coding Agent Native&nbsp; ◦ &nbsp;Flexibly Use&nbsp; ◦ &nbsp;Long Context Tailored</b></p>
 
-<p align="center"><b style="font-size: 2em; color: #3be040ff;">Make Claude Tokens 40% Saving!</b></p>
+<p align="center"><b style="font-size: 2em;">Make Claude Tokens <span style="color: #3be040;">40% Saving</span>!</b></p>
 
 <p align="center"><img src="./images/token_cost.png" style="width: 65%; height: auto;" alt="Tokens Cost Reduction"></p>
 
@@ -74,7 +74,7 @@ Since different modules have different dependencies, please refer to the specifi
 
 ## 📖 User Guides
 
-- For Users, look [Inference Tutorial](./swe-pruner/README.md) for real-world agents integration.
+- For Users, look [Inference Tutorial](./swe-pruner/README.md) to start a swe-pruner locally and then reading [real world examples](examples/README.md) for agents integration.
 
 - For Developers, look `./train`(coming soon) for training a pruner by yourself!
 
