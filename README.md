@@ -9,7 +9,10 @@
 <summary><h2>📢 Latest Updates</h2></summary>
 
 **🔥 Releases:**
-- 1/26/2025: Introduce **SWE-Pruner** 
+- 1/27/2025: We published our tech blogs: `Towards Real-World Software Agents: How we push Semantic Highlight feature to Agentic Coding?`
+  - [English Ver](https://www.notion.so/Towards-Real-World-Software-Agents-How-we-push-Semantic-Highlight-feature-to-Agentic-Coding-2f5b099561948096b911c9e1043b8e11)
+  - [Chinese Ver](https://www.notion.so/2f5b0995619480ff8bc5edce30de6b92)
+- 1/26/2025: Introduce **SWE-Pruner**
   - 📖 paper: https://arxiv.org/abs/2601.16746
   - ⚙️ code: https://github.com/Ayanami1314/swe-pruner
   - 🐍 pip: https://pypi.org/project/swe-pruner/
@@ -86,7 +89,7 @@ Since different modules have different dependencies, please refer to the specifi
 - [ ] 💻 Update Training Code
 - [ ] 📁 Upload full parameters and trajectory files & logs
 - [ ] 🤗 Update HuggingFace model card
-- [ ] 🤗 Update HuggingFace blog to introducing our  technical approach in detail.
+- [x] 🤗 Update HuggingFace blog to introducing our  technical approach in detail.
 - [x] 🎮 Update agents integrate demo
 
 
