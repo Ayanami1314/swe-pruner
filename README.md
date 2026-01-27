@@ -1,8 +1,19 @@
 # SWE-Pruner: Self-Adaptive Context Pruning for Coding Agents
 
+<div align="center">
+
+[![arXiv](https://img.shields.io/badge/arXiv-2601.16746-b31b1b.svg)](https://arxiv.org/abs/2601.16746)
+[![GitHub](https://img.shields.io/badge/GitHub-Repo-181717.svg?logo=github)](https://github.com/Ayanami1314/swe-pruner)
+[![PyPI](https://img.shields.io/pypi/v/swe-pruner.svg)](https://pypi.org/project/swe-pruner/)
+[![Hugging Face](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Model-blue)](https://huggingface.co/ayanami-kitasan/code-pruner)
+[![Bytedance](https://img.shields.io/badge/Bytedance-Research-blue)]()
+[![License](https://img.shields.io/badge/License-MIT-green.svg)]()
+
+</div>
+
 <p align="center"><b>Semantic Highlight&nbsp; ◦ &nbsp;Coding Agent Native&nbsp; ◦ &nbsp;Flexibly Use&nbsp; ◦ &nbsp;Long Context Tailored</b></p>
 
-<p align="center"><b style="font-size: 2em;">Make Claude Tokens <span style="color: #3be040;">40% Saving</span>!</b></p>
+<p align="center"><b style="font-size: 1.2em;">Make Claude Tokens <span style="color:#FF702D;">40% Saving</span>!</b></p>
 
 <p align="center"><img src="./images/token_cost.png" style="width: 65%; height: auto;" alt="Tokens Cost Reduction"></p>
 
@@ -26,29 +37,28 @@
 
 <p align="center"><img src="./images/overview.jpg" style="width: 85%; height: auto;" alt="Tokens Cost Reduction"></p>
 
-Are you struggling with **excessive token costs** and latency when using LLM agents for software development? Traditional context compression approaches rely on fixed metrics like perplexity (PPL), ignoring the task-specific nature of code understanding. But **generic compression ≠ relevant preservation** — what we truly need is **task-aware context pruning** that maintains critical implementation details. When working with complex codebases that demand precise understanding and debugging capabilities, one-size-fits-all compression often breaks syntactic structures and loses essential information.
+Are you struggling with **excessive token costs** and latency when using LLM agents for software development? Traditional context compression often relies on fixed metrics like perplexity (PPL) and ignores task-specific code understanding. But **generic compression ≠ relevant preservation** — we need **task-aware context pruning** that retains critical implementation details.
 
-Inspired by how human programmers "selectively skim" source code during development, we propose SWE-Pruner — a self-adaptive context pruning framework specifically designed for coding agents. It enables agents to formulate explicit goals that guide intelligent context pruning, using a lightweight neural skimmer to **dynamically select relevant code lines**. This approach mimics how experienced developers navigate through codebases, focusing only on what matters for the current task. SWE-Pruner operates in two key steps:
-
+Inspired by how human programmers "selectively skim" source code, **SWE-Pruner** enables agents to formulate explicit goals and uses a lightweight neural skimmer to **dynamically select relevant code lines**. It operates in two key steps:
 - Formulate task-specific goals to guide the pruning process
 - Dynamically select relevant code lines using a lightweight neural skimmer
 
 ## 🎯 Core Features
 
 **🧠 Task-Aware Pruning**
-Moves beyond generic metrics like perplexity. SWE-Pruner understands the *intent* behind a coding task, allowing the agent to formulate explicit goals (e.g., "focus on error handling") that intelligently guide the context pruning process.
+  Understands the *intent* (e.g., "focus on error handling") and uses it to guide context pruning process, beyond generic metrics.
 
 **🤖 Coding Agent Native**
-Specifically designed for the multi-turn, interactive workflows of modern coding agents. It seamlessly integrates into the agent's decision loop, providing just-in-time context to enhance performance on complex software engineering tasks.
+  Built for multi-turn workflows and integrates seamlessly into agent decision loops, providing just-in-time context for complex software engineering tasks.
 
 **🎨 Semantic Highlight**
-Employs a lightweight 0.6B parameter neural skimmer trained to identify and preserve semantically critical lines of code. This ensures that logical structures and implementation details remain intact, preventing the information loss common in traditional compression.
+  A lightweight [0.6B model](https://huggingface.co/ayanami-kitasan/code-pruner) identifies and preserves semantically critical lines of code, keeping logical structures intact.
 
 **⚡ Extreme Compression**
-Delivers significant token savings without sacrificing performance. Achieve 23-54% token reduction on complex agent tasks like SWE-Bench Verified and up to 14.84x compression on single-turn tasks like LongCodeQA, dramatically cutting API costs and latency.
+  Delivers significant token savings without sacrificing performance: **23-54%** token reduction on [SWE-Bench Verified](https://openai.com/index/introducing-swe-bench-verified/) and up to **14.84x** compression on [LongCodeQA](https://github.com/Zteefano/long-code-bench), cutting API costs and latency.
 
 **🔧 Flexibly Use**
-A lightweight and adaptable framework that can be easily integrated with various LLMs and coding agents. Its flexible design allows it to be applied across a wide range of scenarios, from debugging to feature development.
+  Adaptable framework for various LLMs and scenarios, from debugging to feature development.
 
 ## 🌲 Project Structure
 ```text
