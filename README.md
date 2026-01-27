@@ -74,7 +74,7 @@ Inspired by how human programmers "selectively skim" source code, **SWE-Pruner**
 
 ## 🧰 Prerequisites
 
-This project uses `uv` for fast and efficient dependency management.
+This project uses [uv](https://docs.astral.sh/uv/) for fast and efficient dependency management.
 
 ## 🎮 Quick Start
 
