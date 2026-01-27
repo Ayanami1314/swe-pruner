@@ -8,7 +8,7 @@
 [![Hugging Face](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Model-blue)](https://huggingface.co/ayanami-kitasan/code-pruner)
 [![Bytedance](https://img.shields.io/badge/Bytedance-Research-blue)]()
 [![License](https://img.shields.io/badge/License-MIT-green.svg)]()
-
+[![Blog](https://img.shields.io/badge/Notion-Blogs-000000)](https://www.notion.so/Yuhang-Wang-s-LLMSE-articles-2f0b0995619480d09880e9668338651e)
 </div>
 
 <p align="center"><b>Semantic Highlight&nbsp; ◦ &nbsp;Coding Agent Native&nbsp; ◦ &nbsp;Flexibly Use&nbsp; ◦ &nbsp;Long Context Tailored</b></p>
@@ -21,8 +21,8 @@
 
 **🔥 Releases:**
 - 1/27/2025: We published our tech blogs: `Towards Real-World Software Agents: How we push Semantic Highlight feature to Agentic Coding?`
-  - [English Ver](https://www.notion.so/Towards-Real-World-Software-Agents-How-we-push-Semantic-Highlight-feature-to-Agentic-Coding-2f5b099561948096b911c9e1043b8e11)
-  - [Chinese Ver](https://www.notion.so/2f5b0995619480ff8bc5edce30de6b92)
+  - 📄 [Towards Real-World Software Agents: How we push Semantic Highlight feature to Agentic Coding? ](https://www.notion.so/Towards-Real-World-Software-Agents-How-we-push-Semantic-Highlight-feature-to-Agentic-Coding-2f5b099561948096b911c9e1043b8e11)
+  - 📄 [迈向真实世界的软件智能体：如何将语义高亮功能融入智能体编程？](https://www.notion.so/2f5b0995619480ff8bc5edce30de6b92)
 - 1/26/2025: Introduce **SWE-Pruner**
   - 📖 paper: https://arxiv.org/abs/2601.16746
   - ⚙️ code: https://github.com/Ayanami1314/swe-pruner
