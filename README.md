@@ -98,8 +98,10 @@ Since different modules have different dependencies, please refer to the specifi
 
 
 ## 🔮 Coming Soon
-- [ ] 💻 Update Training Code
+- [ ] 💻 Update Training Code of SWE-Pruner
 - [ ] 📁 Upload full parameters and trajectory files & logs
+- [ ] 📁 Upload Training Dataset of SWE-Pruner
+- [ ] 📁 Upload SWE-QA evaluation code
 - [x] 🤗 Update HuggingFace model card
 - [x] 🤗 Update HuggingFace blog to introducing our  technical approach in detail.
 - [x] 🎮 Update agents integrate demo
