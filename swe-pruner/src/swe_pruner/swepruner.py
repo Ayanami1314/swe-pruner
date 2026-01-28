@@ -1,3 +1,4 @@
+import os
 import torch
 from transformers import AutoConfig, AutoTokenizer, PreTrainedModel
 from transformers.modeling_outputs import ModelOutput
@@ -56,11 +57,17 @@ class SwePrunerForCodeCompression(SwePrunerPreTrainedModel):
         )
 
         # Load tokenizer to pass to TokenScorer
+        # If config was loaded from a local path, use tokenizer from the same directory
         trust_remote_code = getattr(config, "trust_remote_code", True)
-
-        tokenizer = AutoTokenizer.from_pretrained(
-            config.backbone_model_name_or_path, trust_remote_code=trust_remote_code
+        pruner_path = getattr(config, "_name_or_path", None)
+        is_local_path = pruner_path is not None and os.path.isdir(pruner_path)
+        tokenizer_path = (
+            pruner_path if is_local_path else config.backbone_model_name_or_path
         )
+        tokenizer = AutoTokenizer.from_pretrained(
+            tokenizer_path, trust_remote_code=trust_remote_code
+        )
+
         load_pretrained_backbone = not is_loading_from_pretrained
         backbone_config = None
 
