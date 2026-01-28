@@ -31,9 +31,6 @@
   - 🤗 huggingface: https://huggingface.co/ayanami-kitasan/code-pruner
 
 
-
-
-
 ## 📑 Introduction to SWE-Pruner
 
 <p align="center"><img src="./images/overview.jpg" style="width: 85%; height: auto;" alt="Tokens Cost Reduction"></p>
@@ -127,3 +124,6 @@ We provide some utils scripts for continue improving the swe-pruner in `./utils`
 ## 🏆 Acknowledgements
 - Bytedance Douyin Team for advises.
 - Alibaba Qwen Team for open-source models.
+
+## ⭐ Star History
+[![Star History Chart](https://api.star-history.com/svg?repos=Ayanami1314/swe-pruner&type=Date)](https://star-history.com/#Ayanami1314/swe-pruner&Date)
