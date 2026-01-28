@@ -20,6 +20,7 @@
 <summary><h2>📢 Latest Updates</h2></summary>
 
 **🔥 Releases:**
+- 1/28/2025: We release some scripts for optimize and visualize the result! see `./utils`
 - 1/27/2025: We published our tech blogs: `Towards Real-World Software Agents: How we push Semantic Highlight feature to Agentic Coding?`
   - 📄 [Towards Real-World Software Agents: How we push Semantic Highlight feature to Agentic Coding? ](https://www.notion.so/Towards-Real-World-Software-Agents-How-we-push-Semantic-Highlight-feature-to-Agentic-Coding-2f5b099561948096b911c9e1043b8e11)
   - 📄 [迈向真实世界的软件智能体：如何将语义高亮功能融入智能体编程？](https://www.notion.so/2f5b0995619480ff8bc5edce30de6b92)
@@ -96,6 +97,8 @@ Since different modules have different dependencies, please refer to the specifi
 
 - For Researchers, `./downstream_eval` has some scripts for reproducing our results. We recommend to use [slurm](https://github.com/SchedMD/slurm) with at least 4 GPU to reuse our scripts.
 
+## 🧪 Utils Scripts
+We provide some utils scripts for continue improving the swe-pruner in `./utils`, just look `utils/README.md`!
 
 ## 🔮 Coming Soon
 - [ ] 💻 Update Training Code of SWE-Pruner
