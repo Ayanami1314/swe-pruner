@@ -53,7 +53,7 @@ model/
 Start the FastAPI server using the CLI:
 
 ```bash
-swe-pruner serve --model-path ./model --port 8000
+swe-pruner --model-path ./model --port 8000
 ```
 
 Options:
@@ -65,7 +65,7 @@ You can also set the model path using an environment variable:
 
 ```bash
 export SWEPRUNER_MODEL_PATH=./model
-swe-pruner serve
+swe-pruner
 ```
 
 ### Python API
@@ -73,7 +73,7 @@ swe-pruner serve
 #### Basic Usage
 
 ```python
-from hf.prune_wrapper import SwePrunerForCodePruning, PruneRequest
+from swe_pruner.prune_wrapper import SwePrunerForCodePruning, PruneRequest
 
 # Load the model
 model = SwePrunerForCodePruning.from_pretrained("./model")
