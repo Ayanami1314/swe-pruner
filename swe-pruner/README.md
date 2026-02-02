@@ -35,8 +35,20 @@ The pre-trained model files are not included in the PyPI package. You need to do
 # Using huggingface-hub
 huggingface-cli download ayanami-kitasan/code-pruner --local-dir ./model
 ```
+2. **Use git LFS**:
 
-2. **Manual download**: Download the model files and place them in a directory (e.g., `./model`) with the following structure:
+How to install git lfs: https://github.com/git-lfs/git-lfs/blob/main/INSTALLING.md
+
+After cloing this repo, you will see
+```
+version https://git-lfs.github.com/spec/v1
+oid sha256:373b77f5262c3298b803303d49ea38949d3e92f08dc3bbb90b03f490413adae9
+size 1345834856
+```
+in `model.safetensors`. And you can directly run `git lfs pull` to fetch model.
+
+
+3. **Manual download**: Download the model files and place them in a directory (e.g., `./model`) with the following structure:
 ```
 model/
 ├── config.json
