@@ -78,8 +78,7 @@ This project uses [uv](https://docs.astral.sh/uv/) for fast and efficient depend
 
 Go to [Inference Tutorial](./swe-pruner/README.md) and have a try!
 
-> Tips: For easier serving and reproducing, we upload our models in `./swe-pruner/model` directory(tracked by git lfs). It make the serving more simple but greatly increase the repo size if you use `git clone` directly (and might failed to download model for traffic limit of github lfs service). However, you can use the methods in the tutorial to download it from HuggingFace.
-
+> Tips: For easier serving and reproducing, we upload our models in `./swe-pruner/model` directory(tracked by git lfs). It make the serving more simple but greatly increase the repo size if you use `git clone` directly without lfs config (and might failed to download model for traffic limit of github lfs service). However, you can use the methods in the tutorial to download it from HuggingFace.
 
 ## ⚙️ Installation
 
