@@ -24,6 +24,7 @@ dependencies = [
     "fastapi>=0.123.0",
     # "flash-attn",
     "huggingface-hub>=0.36.0",
+    "mcp[cli]>=1.26.0",
     "socksio>=1.0.0",
     # "torch>=2.8.0",
     # "torchvision>=0.23.0",
@@ -34,13 +35,15 @@ dependencies = [
 
 [project.scripts]
 swe-pruner = "swe_pruner.online_serving:main"
+swe-pruner-mcp = "swe_pruner_mcp.server:main"
 
 [tool.hatchling.build.targets.wheel]
-packages = ["src/swe_pruner"]
+packages = ["src/swe_pruner", "src/swe_pruner_mcp"]
 
 [tool.hatchling.build]
 include = [
   "src/swe_pruner/**/*.py",
+  "src/swe_pruner_mcp/**/*.py",
   "LICENSE",
   "README.md",
 ]
