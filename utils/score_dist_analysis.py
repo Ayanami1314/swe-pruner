@@ -22,11 +22,20 @@ import argparse
 import json
 import sys
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
 import numpy as np
 import requests
+
+# For PNG export without kaleido
+try:
+    import matplotlib.pyplot as plt
+
+    MATPLOTLIB_AVAILABLE = True
+except ImportError:
+    MATPLOTLIB_AVAILABLE = False
 
 # ---------------------------------------------------------------------------
 # Re-use helpers from threshold_optimizer (same directory)
@@ -80,29 +89,30 @@ def enrich_dataset(
     base_url: str = "http://localhost:8000",
     threshold: float = 0.5,
     timeout: int = 120,
+    batch_size: int = 16,
     verbose: bool = True,
 ) -> List[Dict[str, Any]]:
     """Call inference API for each sample and attach token_scores + predicted score.
 
     Skips samples that already have a non-empty ``token_scores`` field.
+    Processes samples in batches using thread pool for concurrent requests.
     """
     total = len(dataset)
-    enriched = []
+    enriched = [None] * total  # Pre-allocate to maintain order
     t0 = time.time()
 
-    for idx, sample in enumerate(dataset):
+    def process_sample(
+        idx_in_batch: int, global_idx: int, sample: Dict[str, Any]
+    ) -> tuple:
+        """Process a single sample and return (global_idx, enriched_sample)."""
         # Skip if already enriched
         if sample.get("token_scores"):
-            enriched.append(sample)
-            if verbose and (idx + 1) % 50 == 0:
-                print(f"  [{idx + 1}/{total}] skipped (already has token_scores)")
-            continue
+            return (global_idx, sample)
 
         query = sample.get("query", "")
         code = sample.get("code", "")
         if not query or not code:
-            enriched.append(sample)
-            continue
+            return (global_idx, sample)
 
         try:
             resp = call_prune_api(
@@ -116,19 +126,42 @@ def enrich_dataset(
             sample_copy["model_input_token_cnt"] = resp.get(
                 "model_input_token_cnt", None
             )
-            enriched.append(sample_copy)
+            return (global_idx, sample_copy)
         except Exception as e:
-            print(f"  [{idx + 1}/{total}] ERROR: {e}")
-            enriched.append(sample)
+            if verbose:
+                print(f"  [{global_idx + 1}/{total}] ERROR: {e}")
+            return (global_idx, sample)
 
-        if verbose and (idx + 1) % 10 == 0:
-            elapsed = time.time() - t0
-            rate = (idx + 1) / elapsed
-            eta = (total - idx - 1) / rate if rate > 0 else 0
-            print(
-                f"  [{idx + 1}/{total}] {elapsed:.1f}s elapsed, "
-                f"{rate:.1f} samples/s, ETA {eta:.0f}s"
-            )
+    # Process samples in batches with thread pool
+    with ThreadPoolExecutor(max_workers=batch_size) as executor:
+        for batch_start in range(0, total, batch_size):
+            batch_end = min(batch_start + batch_size, total)
+            batch = dataset[batch_start:batch_end]
+
+            # Submit all tasks in batch
+            futures = {}
+            for idx_in_batch, sample in enumerate(batch):
+                global_idx = batch_start + idx_in_batch
+                future = executor.submit(
+                    process_sample, idx_in_batch, global_idx, sample
+                )
+                futures[future] = global_idx
+
+            # Collect results as they complete
+            completed = 0
+            for future in as_completed(futures):
+                global_idx, enriched_sample = future.result()
+                enriched[global_idx] = enriched_sample
+                completed += 1
+
+                if verbose and (global_idx + 1) % 10 == 0:
+                    elapsed = time.time() - t0
+                    rate = (global_idx + 1) / elapsed
+                    eta = (total - global_idx - 1) / rate if rate > 0 else 0
+                    print(
+                        f"  [{global_idx + 1}/{total}] {elapsed:.1f}s elapsed, "
+                        f"{rate:.1f} samples/s, ETA {eta:.0f}s"
+                    )
 
     return enriched
 
@@ -210,7 +243,7 @@ def plot_score_histogram(
             line_dash="dash",
             line_color=color,
             annotation_text=f"τ={tau}",
-            annotation_position="top",
+            annotation_position="bottom",
             row=1,
             col=1,
         )
@@ -240,8 +273,6 @@ def plot_score_histogram(
     )
     fig.update_layout(
         barmode="overlay",
-        row=2,
-        col=1,
     )
 
     for tau, color in [(0.3, "orange"), (0.5, "red"), (0.7, "purple")]:
@@ -250,7 +281,7 @@ def plot_score_histogram(
             line_dash="dash",
             line_color=color,
             annotation_text=f"τ={tau}",
-            annotation_position="top",
+            annotation_position="bottom",
             row=2,
             col=1,
         )
@@ -269,6 +300,76 @@ def plot_score_histogram(
 
     fig.write_html(output_path)
     print(f"Histogram saved to {output_path}")
+
+    # Save PNG format using matplotlib (no kaleido dependency needed)
+    png_path = output_path.replace(".html", ".png")
+    if MATPLOTLIB_AVAILABLE:
+        try:
+            # Create a new matplotlib figure with subplots
+            fig_mpl, axes = plt.subplots(2, 1, figsize=(10, 9))
+
+            # Plot row 1: all scores
+            axes[0].hist(
+                all_scores, bins=50, color="steelblue", alpha=0.8, edgecolor="black"
+            )
+            axes[0].set_title(
+                "Line-Level Score Distribution (All Lines)",
+                fontsize=12,
+                fontweight="bold",
+            )
+            axes[0].set_xlabel("Line Score")
+            axes[0].set_ylabel("Count")
+            for tau, color in [(0.3, "orange"), (0.5, "red"), (0.7, "purple")]:
+                axes[0].axvline(
+                    x=tau, linestyle="--", color=color, linewidth=1.5, label=f"τ={tau}"
+                )
+            axes[0].legend()
+
+            # Plot row 2: split by label
+            keep_scores = all_scores[gt_labels == 1]
+            prune_scores = all_scores[gt_labels == 0]
+            axes[1].hist(
+                keep_scores,
+                bins=50,
+                color="green",
+                alpha=0.6,
+                edgecolor="black",
+                label="GT: keep",
+            )
+            axes[1].hist(
+                prune_scores,
+                bins=50,
+                color="red",
+                alpha=0.6,
+                edgecolor="black",
+                label="GT: prune",
+            )
+            axes[1].set_title(
+                "Score Distribution Split by Ground-Truth Label",
+                fontsize=12,
+                fontweight="bold",
+            )
+            axes[1].set_xlabel("Line Score")
+            axes[1].set_ylabel("Count")
+            for tau, color in [(0.3, "orange"), (0.5, "red"), (0.7, "purple")]:
+                axes[1].axvline(x=tau, linestyle="--", color=color, linewidth=1.5)
+            axes[1].legend()
+
+            fig_mpl.suptitle(
+                f"SWE-Pruner Line-Level Score Distribution (pooling={pooling})",
+                fontsize=14,
+                fontweight="bold",
+            )
+            plt.tight_layout()
+            plt.savefig(png_path, dpi=100, bbox_inches="tight")
+            plt.close(fig_mpl)
+            print(f"Histogram saved to {png_path}")
+        except Exception as e:
+            print(f"WARNING: Could not save PNG ({e}).")
+    else:
+        print(
+            "WARNING: matplotlib not installed. Skipping PNG export. Install with: pip install matplotlib"
+        )
 
     # Also print summary statistics
     print(f"\n{'=' * 60}")

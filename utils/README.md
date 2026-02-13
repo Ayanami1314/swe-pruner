@@ -81,7 +81,7 @@ Validates whether the CRF layer produces **bimodal** (polarized) line-level scor
 4. Runs a **threshold ablation** at τ ∈ {0.3, 0.5, 0.7} (customizable), reporting F1, IoU, precision, recall, and compression rate.
 5. Optionally saves an enriched JSONL with `token_scores` for reuse by `threshold_optimizer.py` / `token_vis.py`.
 
-**Dependencies:** `requests`, `numpy`. For histograms: `plotly`.
+**Dependencies:** `requests`, `numpy`. For histograms: `plotly`, `matplotlib`.
 
 ### Prerequisites
 
@@ -96,18 +96,18 @@ python -m swe_pruner.online_serving serve --model-path /path/to/model
 
 ```bash
 # Run full analysis: call inference, plot histogram, print ablation table
-python utils/score_distribution_analysis.py eval_ds_enhanced-shuf-small.jsonl
+python utils/score_dist_analysis.py eval_ds.jsonl
 
 # Custom thresholds
-python utils/score_distribution_analysis.py eval_ds_enhanced-shuf-small.jsonl \
+python utils/score_dist_analysis.py eval_ds.jsonl \
     --thresholds 0.2 0.3 0.4 0.5 0.6 0.7 0.8
 
 # Save enriched JSONL for later reuse (skip inference next time)
-python utils/score_distribution_analysis.py eval_ds_enhanced-shuf-small.jsonl \
+python utils/score_dist_analysis.py eval_ds.jsonl \
     --save-enriched eval_enriched.jsonl
 
 # Re-run analysis without calling inference (reuse enriched JSONL)
-python utils/score_distribution_analysis.py eval_enriched.jsonl --skip-inference
+python utils/score_dist_analysis.py eval_enriched.jsonl --skip-inference
 ```
 
 ### Options
