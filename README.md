@@ -20,6 +20,7 @@
 <summary><h2>📢 Latest Updates</h2></summary>
 
 **🔥 Releases:**
+- 3/8/2026: Our 61k training dataset(for python) now available in [google drive](https://drive.google.com/file/d/18g_kWeyvd8EICEDZcKylEEf8mnOFhwdi)!
 - 3/8/2026: We update our evaluation pipeline for SWE-QA benchmark! see `downstream_eval/multi_turn/sweqa`
 - 1/28/2026: We release some scripts for optimize and visualize the result! see `./utils`
 - 1/27/2026: We published our tech blogs: `Towards Real-World Software Agents: How we push Semantic Highlight feature to Agentic Coding?`
@@ -100,7 +101,7 @@ We provide some utils scripts for continue improving the swe-pruner in `./utils`
 ## 🔮 Coming Soon
 - [ ] 💻 Update Training Code of SWE-Pruner
 - [ ] 📁 Upload full parameters and trajectory files & logs
-- [ ] 📁 Upload Training Dataset of SWE-Pruner
+- [x] 📁 Upload Training Dataset of SWE-Pruner
 - [x] 📁 Upload SWE-QA evaluation code
 - [x] 🤗 Update HuggingFace model card
 - [x] 🤗 Update HuggingFace blog to introducing our  technical approach in detail.
