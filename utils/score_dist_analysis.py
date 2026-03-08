@@ -199,6 +199,116 @@ def collect_line_scores(
     return np.array(all_scores), np.array(gt_labels)
 
 
+def _precision_recall_at_threshold(
+    all_scores: np.ndarray,
+    gt_labels: np.ndarray,
+    threshold: float,
+) -> Tuple[float, float]:
+    """Line-level precision and recall when using `score >= threshold` as keep."""
+    pred_keep = all_scores >= threshold
+    gt_keep = gt_labels == 1
+    tp = (pred_keep & gt_keep).sum()
+    pred_pos = pred_keep.sum()
+    gt_pos = gt_keep.sum()
+    precision = tp / pred_pos if pred_pos > 0 else 0.0
+    recall = tp / gt_pos if gt_pos > 0 else 0.0
+    return float(precision), float(recall)
+
+
+def bucket_keep_prune_table_and_chart(
+    all_scores: np.ndarray,
+    gt_labels: np.ndarray,
+    output_path: str = "score_histogram.html",
+    num_bins: int = 20,
+) -> None:
+    """Print horizontal table: Precision / Recall per threshold (bucket boundaries), and bar chart."""
+    thresholds = np.linspace(0.0, 1.0, num_bins + 1)
+    precisions = []
+    recalls = []
+    for tau in thresholds:
+        p, r = _precision_recall_at_threshold(all_scores, gt_labels, tau)
+        precisions.append(p)
+        recalls.append(r)
+    precisions = np.array(precisions)
+    recalls = np.array(recalls)
+    thresh_labels = [f"{t:.2f}" for t in thresholds]
+
+    # Horizontal table: rows = Precision, Recall; columns = thresholds
+    col_w = 8
+    ncol = len(thresholds)
+    header = f"  {'Metric':>10} |" + "".join([f" {thresh_labels[j]:>{col_w}} |" for j in range(ncol)])
+    sep = "  " + "-" * (12 + (col_w + 2) * ncol)
+    print(f"\n  Precision / Recall at threshold (τ = bucket boundary, horizontal):")
+    print(header)
+    print(sep)
+    prec_row = "  " + f"{'Precision':>10} |" + "".join([f" {precisions[j]:>{col_w}.4f} |" for j in range(ncol)])
+    rec_row = "  " + f"{'Recall':>10} |" + "".join([f" {recalls[j]:>{col_w}.4f} |" for j in range(ncol)])
+    print(prec_row)
+    print(rec_row)
+    print()
+
+    # Bar chart: Precision and Recall per threshold
+    bar_path_html = output_path.replace(".html", "_prec_recall_by_threshold.html")
+    bar_path_png = bar_path_html.replace(".html", ".png")
+
+    if PLOTLY_AVAILABLE:
+        fig = go.Figure()
+        fig.add_trace(
+            go.Bar(
+                x=thresh_labels,
+                y=precisions,
+                name="Precision",
+                marker_color="green",
+                text=[f"{precisions[j]:.2f}" for j in range(ncol)],
+                textposition="auto",
+            )
+        )
+        fig.add_trace(
+            go.Bar(
+                x=thresh_labels,
+                y=recalls,
+                name="Recall",
+                marker_color="blue",
+                text=[f"{recalls[j]:.2f}" for j in range(ncol)],
+                textposition="auto",
+            )
+        )
+        fig.update_layout(
+            barmode="group",
+            title="Precision / Recall at threshold (τ = bucket boundary)",
+            xaxis_title="Threshold τ",
+            yaxis_title="Score",
+            yaxis_range=[0, 1.05],
+            height=500,
+            width=1000,
+            template="plotly_white",
+            legend=dict(x=0.75, y=0.98),
+        )
+        fig.write_html(bar_path_html)
+        print(f"  Precision/Recall bar chart saved to {bar_path_html}")
+
+    if MATPLOTLIB_AVAILABLE:
+        try:
+            fig_mpl, ax = plt.subplots(figsize=(max(10, ncol * 0.5), 5))
+            x = np.arange(ncol)
+            w = 0.35
+            ax.bar(x - w / 2, precisions, w, label="Precision", color="green", alpha=0.8)
+            ax.bar(x + w / 2, recalls, w, label="Recall", color="blue", alpha=0.8)
+            ax.set_xticks(x)
+            ax.set_xticklabels(thresh_labels, rotation=45, ha="right")
+            ax.set_xlabel("Threshold τ")
+            ax.set_ylabel("Score")
+            ax.set_ylim(0, 1.05)
+            ax.set_title("Precision / Recall at threshold (τ = bucket boundary)")
+            ax.legend()
+            plt.tight_layout()
+            plt.savefig(bar_path_png, dpi=100, bbox_inches="tight")
+            plt.close(fig_mpl)
+            print(f"  Precision/Recall bar chart saved to {bar_path_png}")
+        except Exception as e:
+            print(f"  WARNING: Could not save bar chart PNG ({e}).")
+
+
 def plot_score_histogram(
     all_scores: np.ndarray,
     gt_labels: np.ndarray,
@@ -398,6 +508,14 @@ def plot_score_histogram(
         print("    → Moderate bimodal tendency (>50% in tails)")
     else:
         print("    → Weak bimodal tendency (<50% in tails)")
+
+    # Keep/Prune proportion per threshold bucket (table + bar charts)
+    bucket_keep_prune_table_and_chart(
+        all_scores,
+        gt_labels,
+        output_path=output_path,
+        num_bins=min(num_bins, 20),
+    )
 
 
 # ---------------------------------------------------------------------------

@@ -20,8 +20,9 @@
 <summary><h2>📢 Latest Updates</h2></summary>
 
 **🔥 Releases:**
-- 1/28/2025: We release some scripts for optimize and visualize the result! see `./utils`
-- 1/27/2025: We published our tech blogs: `Towards Real-World Software Agents: How we push Semantic Highlight feature to Agentic Coding?`
+- 3/8/2026: We update our evaluation pipeline for SWE-QA benchmark! see `downstream_eval/multi_turn/sweqa`
+- 1/28/2026: We release some scripts for optimize and visualize the result! see `./utils`
+- 1/27/2026: We published our tech blogs: `Towards Real-World Software Agents: How we push Semantic Highlight feature to Agentic Coding?`
   - 📄 [Towards Real-World Software Agents: How we push Semantic Highlight feature to Agentic Coding? ](https://www.notion.so/Towards-Real-World-Software-Agents-How-we-push-Semantic-Highlight-feature-to-Agentic-Coding-2f5b099561948096b911c9e1043b8e11)
   - 📄 [迈向真实世界的软件智能体：如何将语义高亮功能融入智能体编程？](https://www.notion.so/2f5b0995619480ff8bc5edce30de6b92)
 - 1/26/2025: Introduce **SWE-Pruner**
@@ -100,7 +101,7 @@ We provide some utils scripts for continue improving the swe-pruner in `./utils`
 - [ ] 💻 Update Training Code of SWE-Pruner
 - [ ] 📁 Upload full parameters and trajectory files & logs
 - [ ] 📁 Upload Training Dataset of SWE-Pruner
-- [ ] 📁 Upload SWE-QA evaluation code
+- [x] 📁 Upload SWE-QA evaluation code
 - [x] 🤗 Update HuggingFace model card
 - [x] 🤗 Update HuggingFace blog to introducing our  technical approach in detail.
 - [x] 🎮 Update agents integrate demo
