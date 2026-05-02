@@ -1,0 +1,20 @@
+[project]
+name = "code"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "astchunk>=0.1.0",
+    "dotenv>=0.9.9",
+    "httpx[socks]>=0.28.1",
+    "langchain>=1.2.0",
+    "langchain-core>=1.2.2",
+    "openai==2.8.1",
+    "openhands==1.0.7",
+    "openhands-agent-server==1.1.0",
+    "openhands-sdk==1.1.0",
+    "openhands-tools==1.1.0",
+    "openhands-workspace==1.1.0",
+    "pydantic>=2.12.5",
+]

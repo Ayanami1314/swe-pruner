@@ -1,0 +1,16 @@
+https://github.com/astropy/astropy 0a041d3
+https://github.com/django/django 14fc2e9
+https://github.com/pallets/flask 85c5d93
+https://github.com/matplotlib/matplotlib a5e1f60
+https://github.com/pylint-dev/pylint 44740e5
+https://github.com/pytest-dev/pytest 5989efe
+https://github.com/psf/requests 46e939b
+https://github.com/scikit-learn/scikit-learn adb1ae7
+https://github.com/sphinx-doc/sphinx 6c9e320
+https://github.com/sqlfluff/sqlfluff db9801b
+https://github.com/sympy/sympy 3c817ed
+https://github.com/pydata/xarray 40119bf
+
+https://github.com/conan-io/conan 52f43d9
+https://github.com/reflex-dev/reflex fe0f946
+https://github.com/streamlink/streamlink ab1f365

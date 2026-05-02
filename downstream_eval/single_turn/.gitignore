@@ -1,0 +1,5 @@
+*.out
+*/*.log
+lcc/
+tiktoken_cache/
+logs-lcc-rerank/

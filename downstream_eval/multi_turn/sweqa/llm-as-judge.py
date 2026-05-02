@@ -1,0 +1,361 @@
+"""
+LLM-as-a-Judge: Score Q&A answers using an LLM judge across five dimensions:
+- Correctness
+- Completeness
+- Relevance
+- Clarity
+- Reasoning
+"""
+
+import json
+import os
+import concurrent.futures
+from typing import Dict, Any, Optional, List
+from pathlib import Path
+
+import typer
+from openai import AzureOpenAI
+from dotenv import load_dotenv
+app = typer.Typer(help="LLM-as-a-Judge: score Q&A answers using an LLM")
+
+load_dotenv()
+def get_eval_client() -> AzureOpenAI:
+    print(os.getenv("EVAL_LLM_BASE_URL"))
+    print(os.getenv("EVAL_LLM_API_VERSION"))
+    print(os.getenv("EVAL_LLM_API_KEY"))
+    return AzureOpenAI(
+        azure_endpoint=os.getenv("EVAL_LLM_BASE_URL"),
+        api_version=os.getenv("EVAL_LLM_API_VERSION"),
+        api_key=os.getenv("EVAL_LLM_API_KEY"),
+        default_headers={"X-TT-LOGID": "${your_logid}"},
+    )
+
+
+def score_answer(
+    question: str,
+    reference: str,
+    candidate: str,
+    eval_client: AzureOpenAI,
+    model: str
+) -> Optional[Dict[str, int]]:
+    """Score a candidate answer against a reference answer."""
+    prompt = f"""You are a professional evaluator. Please rate the candidate answer against the reference answer based on five criteria.
+    Evaluation Criteria and Scoring Guidelines (each scored 1 to 10):
+        1. Correctness:
+            10 — Completely correct; core points and details are accurate with no ambiguity.
+            8-9 — Mostly correct; only minor details are slightly inaccurate or loosely expressed.
+            6-7 — Partially correct; some errors or omissions, but main points are generally accurate.
+            4-5 — Several errors or ambiguities that affect understanding of the core information.
+            2-3 — Many errors; misleading or fails to convey key information.
+            1 — Serious errors; completely wrong or misleading.
+        2. Completeness:
+            10 — Covers all key points from the reference answer without omission.
+            8-9 — Covers most key points; only minor non-critical information missing.
+            6-7 — Missing several key points; content is somewhat incomplete.
+            4-5 — Important information largely missing; content is one-sided.
+            2-3 — Covers very little relevant information; seriously incomplete.
+            1 — Covers almost no relevant information; completely incomplete.
+        3. Relevance:
+            10 — Content fully focused on the question topic; no irrelevant information.
+            8-9 — Mostly focused; only minor irrelevant or peripheral information.
+            6-7 — Generally on topic; some off-topic content but still relevant overall.
+            4-5 — Topic not sufficiently focused; contains considerable off-topic content.
+            2-3 — Content deviates from topic; includes excessive irrelevant information.
+            1 — Majority of content irrelevant to the question.
+        4. Clarity:
+            10 — Fluent language; clear and precise expression; very easy to understand.
+            8-9 — Mostly fluent; clear expression with minor unclear points.
+            6-7 — Generally clear; some expressions slightly unclear or not concise.
+            4-5 — Expression somewhat awkward; some ambiguity or lack of fluency.
+            2-3 — Language obscure; sentences are not smooth; hinders understanding.
+            1 — Expression confusing; very difficult to understand.
+        5. Reasoning:
+            10 — Reasoning is clear, logical, and well-structured; argumentation is excellent.
+            8-9 — Reasoning is clear and logical; well-structured with solid argumentation.
+            6-7 — Reasoning generally reasonable; mostly clear logic; minor jumps.
+            4-5 — Reasoning is average; some logical jumps or organization issues.
+            2-3 — Reasoning unclear; lacks logical order; difficult to follow.
+            1 — No clear reasoning; logic is chaotic.
+
+INPUT:
+    Question:{question}
+    Reference Answer:{reference}
+    Candidate Answer:{candidate}
+
+OUTPUT:
+    Please output ONLY a JSON object with 5 integer fields in the range [1,10], corresponding
+    to the evaluation scores:
+        {{
+        "correctness": <1-10>,
+        "completeness": <1-10>,
+        "relevance": <1-10>,
+        "clarity": <1-10>,
+        "reasoning": <1-10>
+        }}
+
+REQUIREMENT:
+    No explanation, no extra text, no formatting other than valid JSON"""
+
+    try:
+        response = eval_client.chat.completions.create(
+            model=model,
+            messages=[
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": prompt
+                        }
+                    ]
+                }
+            ],
+            extra_body={
+                "thinking": {
+                    "include_thoughts": False,
+                    "budget_tokens": 1024
+                }
+            },
+        )
+
+        score_str = response.choices[0].message.content.strip()
+        print(f"Score result: {score_str}")
+
+        try:
+            if score_str.startswith("```json"):
+                score_str = score_str[7:]
+            if score_str.endswith("```"):
+                score_str = score_str[:-3]
+            score_str = score_str.strip()
+
+            scores = json.loads(score_str)
+            required_keys = ["correctness", "completeness", "clarity", "relevance", "reasoning"]
+            for key in required_keys:
+                if key not in scores or not (1 <= scores[key] <= 10):
+                    print(f"Score validation failed: {key} = {scores.get(key)}")
+                    return None
+            return scores
+        except Exception as e:
+            print(f"JSON parse failed: {e}")
+            return None
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        print(f"Scoring error: {e}")
+        return None
+
+
+def process_single_record(
+    candidate_record: Dict[str, Any],
+    reference_dict: Dict[str, str],
+    eval_client: AzureOpenAI,
+    model: str
+) -> Optional[Dict[str, Any]]:
+    """Process a single record for parallel execution."""
+    try:
+        question = candidate_record.get("question", "")
+        candidate_answer = candidate_record.get("answer", "")
+
+        reference = reference_dict.get(question, "")
+
+        if not reference:
+            print(f"Skipping record: no reference answer found")
+            return None
+
+        if not candidate_answer or candidate_answer.strip() == "No answer found":
+            print(f"Skipping record: candidate answer is empty or 'No answer found'")
+            return None
+
+        scores = score_answer(question, reference, candidate_answer, eval_client, model)
+
+        if scores is None:
+            print(f"Skipping record: scoring failed")
+            return None
+
+        result_record = {
+            "question": question,
+            "score": {
+                "correctness": scores["correctness"],
+                "completeness": scores["completeness"],
+                "clarity": scores["clarity"],
+                "relevance": scores["relevance"],
+                "reasoning": scores["reasoning"]
+            }
+        }
+
+        print(f"Scored question: {question[:50]}... - scores: {scores} - total: {sum(scores.values())}")
+        return result_record
+
+    except Exception as e:
+        print(f"Error processing record: {e}")
+        return None
+
+
+def evaluate_jsonl_parallel(
+    candidate_jsonl_path: str,
+    reference_jsonl_path: str,
+    output_jsonl_path: str,
+    eval_client: AzureOpenAI,
+    model: str,
+    max_workers: int = 16
+) -> None:
+    """Process JSONL files in parallel."""
+    reference_dict = {}
+    with open(reference_jsonl_path, 'r', encoding='utf-8') as fin:
+        for line in fin:
+            try:
+                record = json.loads(line)
+                question = record.get("question", "")
+                answer = record.get("answer", "")
+                if question and answer:
+                    reference_dict[question] = answer
+            except Exception as e:
+                print(f"[Skip] Invalid reference JSON line: {e}")
+                continue
+
+    print(f"Loaded {len(reference_dict)} reference answers")
+
+    candidate_records = []
+    with open(candidate_jsonl_path, 'r', encoding='utf-8') as fin:
+        for line in fin:
+            try:
+                record = json.loads(line)
+                candidate_records.append(record)
+            except Exception as e:
+                print(f"[Skip] Invalid candidate JSON line: {e}")
+                continue
+
+    print(f"Loaded {len(candidate_records)} candidate records, starting parallel processing...")
+
+    results = []
+    with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
+        future_to_record = {
+            executor.submit(process_single_record, record, reference_dict, eval_client, model): record
+            for record in candidate_records
+        }
+
+        for future in concurrent.futures.as_completed(future_to_record):
+            record = future_to_record[future]
+            try:
+                result = future.result()
+                if result is not None:
+                    results.append(result)
+            except Exception as e:
+                print(f"Error processing record: {e}")
+
+    print(f"Scoring done, processed {len(results)} records, writing results...")
+
+    os.makedirs(os.path.dirname(output_jsonl_path), exist_ok=True)
+
+    with open(output_jsonl_path, 'w', encoding='utf-8') as fout:
+        for result in results:
+            fout.write(json.dumps(result, ensure_ascii=False) + "\n")
+
+    print(f"Results saved to: {output_jsonl_path}")
+
+
+@app.command()
+def evaluate(
+    candidate_path: str = typer.Option(..., "--candidate", "-c", help="Candidate answer JSONL file path"),
+    reference_path: str = typer.Option(..., "--reference", "-r", help="Reference answer JSONL file path"),
+    output_path: str = typer.Option(..., "--output", "-o", help="Output scored JSONL file path"),
+    model: Optional[str] = typer.Option(None, "--model", "-m", help="Evaluation model name (defaults to env config)"),
+    max_workers: int = typer.Option(16, "--workers", "-w", help="Max parallel worker threads"),
+) -> None:
+    """Evaluate a single candidate answer file."""
+    eval_client = get_eval_client()
+    eval_model = model or os.getenv("EVAL_LLM_MODEL_NAME")
+
+    if not os.path.exists(candidate_path):
+        typer.echo(f"Error: candidate file not found: {candidate_path}", err=True)
+        raise typer.Exit(1)
+
+    if not os.path.exists(reference_path):
+        typer.echo(f"Error: reference file not found: {reference_path}", err=True)
+        raise typer.Exit(1)
+
+    evaluate_jsonl_parallel(
+        candidate_path,
+        reference_path,
+        output_path,
+        eval_client,
+        eval_model,
+        max_workers
+    )
+
+
+@app.command()
+def batch(
+    candidate_paths: str = typer.Option(..., "--candidates", "-c", help="Candidate answer JSONL paths, comma-separated"),
+    reference_path: str = typer.Option(..., "--reference", "-r", help="Reference answer JSONL file path"),
+    experiment: str = typer.Option(..., "--experiment", "-e", help="Experiment type: pruner or baseline"),
+    output_dir: Optional[str] = typer.Option(None, "--output-dir", "-o", help="Output directory (defaults to candidate file directory)"),
+    model: Optional[str] = typer.Option(None, "--model", "-m", help="Evaluation model name (defaults to env config)"),
+    max_workers: int = typer.Option(48, "--workers", "-w", help="Max parallel worker threads"),
+) -> None:
+    """Batch evaluate multiple candidate answer files.
+
+    Example:
+    python llm-as-judge.py batch -c "answer/full-glm/reflex.jsonl,answer/full-glm/streamlink.jsonl" -r answer/reference/reflex.jsonl -e pruner
+    """
+    eval_client = get_eval_client()
+    eval_model = model or os.getenv("EVAL_LLM_MODEL_NAME")
+
+    if experiment not in ["pruner", "baseline"]:
+        typer.echo(f"Error: experiment type must be 'pruner' or 'baseline', got: {experiment}", err=True)
+        raise typer.Exit(1)
+
+    candidate_list = [p.strip() for p in candidate_paths.split(",") if p.strip()]
+
+    if not candidate_list:
+        typer.echo("Error: at least one candidate file path is required", err=True)
+        raise typer.Exit(1)
+
+    if not os.path.exists(reference_path):
+        typer.echo(f"Error: reference file not found: {reference_path}", err=True)
+        raise typer.Exit(1)
+
+    typer.echo(f"Model: {eval_model}")
+    typer.echo(f"Experiment type: {experiment}")
+    typer.echo(f"Reference: {reference_path}")
+    typer.echo(f"Candidate files: {len(candidate_list)}")
+
+    for candidate_path in candidate_list:
+        if not os.path.exists(candidate_path):
+            typer.echo(f"Skip: candidate file not found: {candidate_path}", err=True)
+            continue
+
+        candidate_dir = os.path.dirname(candidate_path)
+        candidate_basename = os.path.basename(candidate_path)
+        if candidate_basename.endswith(".jsonl"):
+            name_without_ext = candidate_basename[:-6]
+        else:
+            name_without_ext = candidate_basename
+
+        output_filename = f"{name_without_ext}_{experiment}_score.jsonl"
+
+        if output_dir:
+            output_path = os.path.join(output_dir, output_filename)
+        else:
+            output_path = os.path.join(candidate_dir, output_filename)
+
+        typer.echo(f"\nProcessing: {candidate_path}")
+        typer.echo(f"Output: {output_path}")
+
+        try:
+            evaluate_jsonl_parallel(
+                candidate_path,
+                reference_path,
+                output_path,
+                eval_client,
+                eval_model,
+                max_workers
+            )
+            typer.echo(f"Done: {candidate_path}")
+        except Exception as e:
+            typer.echo(f"Failed: {candidate_path} - {e}", err=True)
+            continue
+
+
+if __name__ == "__main__":
+    app()

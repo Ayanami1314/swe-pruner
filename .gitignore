@@ -1,0 +1,19 @@
+.DS_Store
+**/__pycache__
+**/.venv
+**/.env
+**/dist
+
+# Python-generated files
+**/__pycache__/
+**/*.py[oc]
+**/build/
+
+**/wheels/
+**/*.egg-info
+
+**/swe-repos
+**/.env
+
+**/answer-*
+**/traj-*
