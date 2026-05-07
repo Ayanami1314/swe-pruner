@@ -20,7 +20,6 @@
 <summary><h2>📢 Latest Updates</h2></summary>
 
 **🔥 Releases:**
-- 4/6/2026: SWE-Pruner has been accepted to **ACL 2026 Main Conference**!
 - 4/6/2026: Training code and reproduction guide now available! See [Training Guide](./train/README.md).
 - 3/8/2026: Our 61k training dataset(for python) now available in [google drive](https://drive.google.com/file/d/18g_kWeyvd8EICEDZcKylEEf8mnOFhwdi)!
 - 3/8/2026: We update our evaluation pipeline for SWE-QA benchmark! see `downstream_eval/multi_turn/sweqa`
